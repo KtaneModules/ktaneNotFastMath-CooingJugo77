@@ -199,12 +199,12 @@ public class notFastMath : MonoBehaviour
                         numberField[i, j] = numbers[i * 13 + j];
 
             offset = 0;
-            Debug.LogFormat("[Fast Math #{0}] Calculating offset:", _moduleId);
+            Debug.LogFormat("[Not Fast Math #{0}] Calculating offset:", _moduleId);
             foreach (var rule in rules)
                 if (rule.Applies)
                 {
                     offset += rule.Offset;
-                    Debug.LogFormat("[Fast Math #{0}] {1}: {2}{3} => {4}", _moduleId, rule.Name, rule.Offset > 0 ? "+" : "", rule.Offset, offset);
+                    Debug.LogFormat("[Not Fast Math #{0}] {1}: {2}{3} => {4}", _moduleId, rule.Name, rule.Offset > 0 ? "+" : "", rule.Offset, offset);
                 }
         }
 
@@ -220,9 +220,9 @@ public class notFastMath : MonoBehaviour
     void Init()
     {
         numStages = Rnd.Range(3, 6);
-        Debug.LogFormat("[Fast Math #{0}] This module will have {1} stages.", _moduleId, numStages);
+        Debug.LogFormat("[Not Fast Math #{0}] This module will have {1} stages.", _moduleId, numStages);
         threshold = FindThreshold();
-        Debug.LogFormat("[Fast Math #{0}] Threshold time set to {1} seconds.", _moduleId, threshold);
+        Debug.LogFormat("[Not Fast Math #{0}] Threshold time set to {1} seconds.", _moduleId, threshold);
         GenerateStage(1);
 
         _pressedGo = false;
@@ -239,26 +239,26 @@ public class notFastMath : MonoBehaviour
     {
         int randLeft = Rnd.Range(0, 13), randRight = Rnd.Range(0, 13);
 
-        Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Start!", _moduleId, num);
-        Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Characters are {2}{3}", _moduleId, num, letters[randLeft], letters[randRight]);
+        Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Start!", _moduleId, num);
+        Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Characters are {2}{3}", _moduleId, num, letters[randLeft], letters[randRight]);
 
         Screen.text = letters[randLeft] + " " + letters[randRight];
 
         answer = numberField[randLeft, randRight];
-        Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Number in the table is {2}", _moduleId, num, answer);
+        Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Number in the table is {2}", _moduleId, num, answer);
         answer += offset;
-        Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Adding offset of {2} => {3}", _moduleId, num, offset, answer);
+        Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Adding offset of {2} => {3}", _moduleId, num, offset, answer);
         if (answer > 99)
         {
             answer %= 100;
-            Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Over 99 adjustment => {2}", _moduleId, num, answer);
+            Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Over 99 adjustment => {2}", _moduleId, num, answer);
         }
         while (answer < 0)
         {
             answer += 50;
-            Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Under 0 adjustment => {2}", _moduleId, num, answer);
+            Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Under 0 adjustment => {2}", _moduleId, num, answer);
         }
-        Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Final answer => {2}", _moduleId, num, answer.ToString("D2"));
+        Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Final answer => {2}", _moduleId, num, answer.ToString("D2"));
     }
 
     IEnumerator Countdown()
@@ -292,7 +292,7 @@ public class notFastMath : MonoBehaviour
             btn[i].GetComponent<MeshRenderer>().material.color = new Color32(229, 57, 53, 255);
         }
 
-        Debug.LogFormat("[Fast Math #{0}] Pressed GO! Let the madness begin!", _moduleId);
+        Debug.LogFormat("[Not Fast Math #{0}] Pressed GO! Let the madness begin!", _moduleId);
         StartCoroutine("Countdown");
         _pressedGo = true;
     }
@@ -317,15 +317,15 @@ public class notFastMath : MonoBehaviour
         if (!_lightsOn || _isSolved || digitsEntered < 2 || !_pressedGo) return;
 
         StopCoroutine("Countdown");
-        Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Submit: {2} Expected: {3}", _moduleId, stage, input.ToString("D2"), answer.ToString("D2"));
+        Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Submit: {2} Expected: {3}", _moduleId, stage, input.ToString("D2"), answer.ToString("D2"));
 
         if (input == answer)
         {
-            Debug.LogFormat("[Fast Math #{0}] <Stage {1}> Cleared!", _moduleId, stage);
+            Debug.LogFormat("[Not Fast Math #{0}] <Stage {1}> Cleared!", _moduleId, stage);
             stage++;
             if (stage > numStages)
             {
-                Debug.LogFormat("[Fast Math #{0}] Module passed!", _moduleId);
+                Debug.LogFormat("[Not Fast Math #{0}] Module passed!", _moduleId);
                 Audio.PlaySoundAtTransform("disarmed", Module.transform);
                 barControl.gameObject.transform.localScale = new Vector3(1, 1, 0f);
                 Screen.text = "";
@@ -348,7 +348,7 @@ public class notFastMath : MonoBehaviour
         }
         else
         {
-            Debug.LogFormat("[Fast Math #{0}] Answer incorrect! Strike and reset!", _moduleId);
+            Debug.LogFormat("[Not Fast Math #{0}] Answer incorrect! Strike and reset!", _moduleId);
             Module.HandleStrike();
             Init();
         }
@@ -356,7 +356,7 @@ public class notFastMath : MonoBehaviour
 
     void HandleTimeout()
     {
-        Debug.LogFormat("[Fast Math #{0}] Timeout! Strike and reset!", _moduleId);
+        Debug.LogFormat("[Not Fast Math #{0}] Timeout! Strike and reset!", _moduleId);
         StopCoroutine("Countdown");
         Module.HandleStrike();
         Init();
@@ -379,7 +379,7 @@ public class notFastMath : MonoBehaviour
         }
         catch (JsonReaderException e)
         {
-            Debug.LogFormat("[Fast Math #{0}] JSON reading failed with error {1}, using default threshold.", _moduleId, e.Message);
+            Debug.LogFormat("[Not Fast Math #{0}] JSON reading failed with error {1}, using default threshold.", _moduleId, e.Message);
             return 10;
         }
     }
