@@ -199,13 +199,6 @@ public class notFastMath : MonoBehaviour
                         numberField[i, j] = numbers[i * 13 + j];
 
             offset = 0;
-            Debug.LogFormat("[Not Fast Math #{0}] Calculating offset:", _moduleId);
-            foreach (var rule in rules)
-                if (rule.Applies)
-                {
-                    offset += rule.Offset;
-                    Debug.LogFormat("[Not Fast Math #{0}] {1}: {2}{3} => {4}", _moduleId, rule.Name, rule.Offset > 0 ? "+" : "", rule.Offset, offset);
-                }
         }
 
         Module.OnActivate += Activate;
@@ -402,5 +395,38 @@ public class notFastMath : MonoBehaviour
         }
 
         return null;
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        while (!_lightsOn) yield return true;
+        if ((digitsEntered == 2 && input != answer) || (digitsEntered == 1 && (input.ToString("00")[0] != answer.ToString("00")[0])))
+        {
+            Module.HandlePass();
+            _isSolved = true;
+            StopAllCoroutines();
+        }
+        if (!_pressedGo)
+        {
+            go.OnInteract();
+            yield return new WaitForSeconds(.1f);
+        }
+        int start = stage;
+        for (int i = start; i < numStages + 1; i++)
+        {
+            string ans = answer.ToString("00");
+            if (digitsEntered == 0)
+            {
+                btn[int.Parse(ans[0].ToString())].OnInteract();
+                yield return new WaitForSeconds(.1f);
+            }
+            if (digitsEntered == 1)
+            {
+                btn[int.Parse(ans[1].ToString())].OnInteract();
+                yield return new WaitForSeconds(.1f);
+            }
+            submit.OnInteract();
+            yield return new WaitForSeconds(.1f);
+        }
     }
 }
